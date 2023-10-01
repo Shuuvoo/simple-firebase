@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
 import app from "../../Firebase/FirebaseInit";
 
 
@@ -9,10 +9,12 @@ const Login = () => {
     console.log(auth)
 
     // eslint-disable-next-line no-unused-vars
-    const provider = new GoogleAuthProvider()
+    const googleProvider = new GoogleAuthProvider()
+    const githubProvider = new GithubAuthProvider()
+
 
     const handleGoogleSignIn = () => {
-       signInWithPopup(auth, provider)
+       signInWithPopup(auth, googleProvider)
        .then (result => {
         const loggedInUser = result.user
         console.log(loggedInUser)
@@ -23,6 +25,21 @@ const Login = () => {
        })
     }
 
+    const handleGithubSignIn = () =>  {
+
+        signInWithPopup(auth, githubProvider)
+        .then(result => {
+            const loggedUser = result.user
+            console.log(loggedUser)
+            setUser(loggedUser)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+
+
+
+    }
     const handleSignOut = () => {
         signOut(auth,)
         .then(result => {
@@ -41,7 +58,10 @@ const Login = () => {
 
            { user ?
              <button onClick={handleSignOut} >Sign Out</button> :
-             <button onClick={handleGoogleSignIn} >Google Login</button>
+            <>
+                 <button onClick={handleGoogleSignIn} >Google Login</button>
+                 <button onClick={handleGithubSignIn}>Github Login</button>
+            </>
            }
             <div>
                <h1>User: {user?.displayName}</h1>
